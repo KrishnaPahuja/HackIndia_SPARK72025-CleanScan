@@ -1,3 +1,4 @@
 CleanScan is a full-stack environmental reporting app that allows users to capture images of waste or littered areas, attach geolocation data, and submit detailed reports. The frontend is built with React, offering a user-friendly interface to upload images and input contextual information. These reports are sent to a Flask backend integrated with a Gemini API, which intelligently analyzes the images to categorize waste, provide cleanup advice, and suggest relevant NGOs or municipal contacts for action. The platform streamlines waste reporting and fosters civic engagement for cleaner communities.
 
-W3: https://github.com/Adhyan08/geo-reward-snap.git
+# W3: https://github.com/Adhyan08/geo-reward-snap.git
+https://geo-reward-snap.lovable.app/
