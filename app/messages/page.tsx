@@ -53,8 +53,8 @@ export default function MessagesPage() {
             <div className="h-1.5 w-20 bg-green-500 rounded-full mb-4"></div>
             <p className="text-gray-600 text-lg max-w-xl">
               {getUserRole() === 'restaurant' 
-                ? 'Connect with NGOs about your food donations and coordinate deliveries in real-time.' 
-                : 'Communicate with restaurants about their donations and arrange pickup details effortlessly.'}
+                ? 'Connect with NGOs about your waste reports and coordinate pickups in real-time.' 
+                : 'Communicate with NGOs about their donations and arrange cleanup details effortlessly.'}
             </p>
           </div>
           
@@ -70,8 +70,8 @@ export default function MessagesPage() {
                 <h3 className="font-semibold text-gray-800 mb-2">How it works</h3>
                 <p className="text-gray-600">
                   {getUserRole() === 'restaurant' 
-                    ? 'This messaging system connects you with NGOs. You can chat with NGOs that have claimed your food donations, or start a new conversation with any registered NGO using the "New Message" button.'
-                    : 'This messaging system connects you with restaurants that have food donations you\'ve claimed. Use it to arrange pickup details and ask any questions.'}
+                    ? 'This messaging system connects you with NGOs. You can report waste and start a new conversation with nearest registered NGO using the "New Message" button.'
+                    : ''}
                 </p>
               </div>
             </div>

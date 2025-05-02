@@ -9,6 +9,15 @@ export interface IUser extends mongoose.Document {
   role: 'restaurant' | 'ngo';
   rating: number;
   ratingCount: number;
+  tokens: number;
+  ngoDetails?: {
+    sector: string;
+    certNumber: string;
+    volunteers?: string;
+    wasteTypes?: string;
+    operationRegion?: string;
+    updatedAt?: Date;
+  };
   createdAt: Date;
   updatedAt: Date;
 }
@@ -50,6 +59,18 @@ const UserSchema = new mongoose.Schema(
     ratingCount: {
       type: Number,
       default: 0,
+    },
+    tokens: {
+      type: Number,
+      default: 0,
+    },
+    ngoDetails: {
+      sector: String,
+      certNumber: String,
+      volunteers: String,
+      wasteTypes: String,
+      operationRegion: String,
+      updatedAt: Date
     },
   },
   {

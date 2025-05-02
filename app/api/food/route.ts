@@ -104,7 +104,12 @@ export async function POST(req: Request) {
       );
     }
     
-    const { title, description, photo, guidelinesAccepted } = await req.json();
+    // Log the raw request body for debugging
+    const rawBody = await req.json();
+    console.log("Raw request body received:", rawBody);
+    console.log("Location from request:", rawBody.location);
+    
+    const { title, description, photo, guidelinesAccepted, location } = rawBody;
     
     // Check if guidelines were accepted
     if (!guidelinesAccepted) {
@@ -123,14 +128,28 @@ export async function POST(req: Request) {
       );
     }
     
+    // Log what we're going to create
+    console.log("Creating food entry with data:");
+    console.log("- Title:", title);
+    console.log("- Description:", description);
+    console.log("- Photo length:", photo ? photo.length : 0);
+    console.log("- Location:", location);
+    console.log("- Donor ID:", donor._id);
+    
     // Create new food donation
     const food = await Food.create({
       title,
       description,
       photo,
+      location: location || '',
       donorId: donor._id,
       guidelinesAccepted,
     });
+    
+    // Log the created food object
+    console.log("Created food entry with ID:", food._id);
+    console.log("Does it have location?", !!food.location);
+    console.log("Location value:", food.location);
     
     return NextResponse.json(food, { status: 201 });
   } catch (error: any) {

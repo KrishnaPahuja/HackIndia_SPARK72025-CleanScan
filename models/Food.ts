@@ -4,6 +4,7 @@ export interface IFood extends mongoose.Document {
   title: string;
   description: string;
   photo: string;
+  location?: string;
   donorId: mongoose.Schema.Types.ObjectId;
   receiverId?: mongoose.Schema.Types.ObjectId;
   status: 'available' | 'claimed' | 'completed' | 'expired';
@@ -34,6 +35,10 @@ const FoodSchema = new mongoose.Schema(
     photo: {
       type: String, // URL to the photo
       required: [true, 'Please provide a photo'],
+    },
+    location: {
+      type: String, // Coordinates or address as string
+      default: '',
     },
     donorId: {
       type: mongoose.Schema.Types.ObjectId,

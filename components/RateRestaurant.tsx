@@ -65,10 +65,10 @@ export default function RateRestaurant({ foodId, restaurantId, onRatingSuccess }
 
   return (
     <div className="card">
-      <h3 className="text-lg font-semibold mb-4">Rate This Restaurant</h3>
+      {/* <h3 className="text-lg font-semibold mb-4">Rate This Restaurant</h3> */}
       
       <form onSubmit={handleRatingSubmit}>
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <p className="mb-2">Your Rating:</p>
           <div className="flex">
             {[1, 2, 3, 4, 5].map((star) => (
@@ -86,11 +86,11 @@ export default function RateRestaurant({ foodId, restaurantId, onRatingSuccess }
               </button>
             ))}
           </div>
-        </div>
+        </div> */}
         
         <div className="mb-4">
           <label htmlFor="comment" className="block mb-2 text-sm font-medium">
-            Comment (Optional):
+            Feedback (Authenticity):
           </label>
           <textarea
             id="comment"
@@ -98,7 +98,7 @@ export default function RateRestaurant({ foodId, restaurantId, onRatingSuccess }
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             className="input"
-            placeholder="Share your experience with this restaurant..."
+            placeholder="Was the post genuine?"
             maxLength={200}
           />
           <p className="text-xs text-gray-500 mt-1">
@@ -113,7 +113,7 @@ export default function RateRestaurant({ foodId, restaurantId, onRatingSuccess }
           disabled={loading}
           className="btn-primary w-full"
         >
-          {loading ? 'Submitting...' : 'Submit Rating'}
+          {loading ? 'Submitting...' : 'Submit '}
         </button>
       </form>
     </div>

@@ -3,6 +3,24 @@ import { compare } from 'bcrypt';
 import dbConnect from '@/lib/db';
 import User from '@/models/User';
 import { AuthOptions } from 'next-auth';
+import { JWT } from 'next-auth/jwt';
+import { Session, User as NextAuthUser } from 'next-auth';
+
+// Extend the built-in session and user types
+interface ExtendedUser extends NextAuthUser {
+  id: string;
+  role: 'restaurant' | 'ngo';
+}
+
+interface ExtendedSession extends Session {
+  user: {
+    id: string;
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+    role: 'restaurant' | 'ngo';
+  };
+}
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -45,16 +63,19 @@ export const authOptions: AuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.role = user.role;
+        token.role = (user as ExtendedUser).role;
       }
       return token;
     },
-    async session({ session, token }) {
-      if (token) {
-        session.user.id = token.id;
-        session.user.role = token.role;
-      }
-      return session;
+    async session({ session, token }): Promise<ExtendedSession> {
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: token.id as string,
+          role: token.role as 'restaurant' | 'ngo',
+        },
+      };
     },
   },
   pages: {

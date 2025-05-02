@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import Navbar from '@/components/Navbar';
-import { FaBars, FaTimes, FaBowlFood, FaUtensils, FaHandHoldingHeart } from "react-icons/fa";
+import { FaBars, FaTimes,  FaUtensils, FaHandHoldingHeart } from "react-icons/fa";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
 // Extend the user type to include role
@@ -71,13 +71,13 @@ export default function Home() {
           <div className="flex flex-col md:flex-row items-center py-12">
             <div className="md:w-1/2 md:pr-12 mb-8 md:mb-0">
               <div className="inline-block px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-white text-sm font-medium mb-4">
-                Reducing Food Waste Together
+                Reducing Waste Together
               </div>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-                Save Food, <span className="text-yellow-300">Save Lives</span>
+              "Spot. <span className="text-yellow-300">Scan. </span>Solve."
               </h1>
               <p className="text-xl mb-8 text-white/90 leading-relaxed">
-                Connect restaurants with excess food to organizations that help those in need. Join our mission to reduce waste and fight hunger.
+                Clean India Starts Here!
               </p>
               <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
                 {!session ? (
@@ -85,7 +85,7 @@ export default function Home() {
                     href="/register"
                     className="bg-white text-green-600 font-bold rounded-full px-8 py-4 text-center hover:bg-gray-100 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
                   >
-                    Join Now
+                    Join The Revolution
                   </Link>
                 ) : (
                   <Link
@@ -107,7 +107,7 @@ export default function Home() {
               <div className="relative h-72 sm:h-80 md:h-96 w-full rounded-2xl overflow-hidden shadow-2xl transform md:rotate-2 hover:rotate-0 transition-all duration-500">
                 <Image
                   src="https://images.unsplash.com/photo-1488459716781-31db52582fe9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
-                  alt="Food donation"
+                  alt="Waste Management"
                   fill
                   priority
                   className="transition-transform duration-700 hover:scale-110"
@@ -116,7 +116,7 @@ export default function Home() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                 <div className="absolute bottom-4 left-4 right-4 text-white">
                   <div className="bg-green-600/80 backdrop-blur-sm px-4 py-2 rounded-lg inline-block">
-                    <p className="font-medium">Join 42+ restaurants fighting food waste</p>
+                    <p className="font-medium">Join 100+ NGOs fighting waste</p>
                   </div>
                 </div>
               </div>
@@ -151,7 +151,7 @@ export default function Home() {
                   <span className="text-5xl font-bold text-gray-900">{stats.totalFood}</span>
                   <span className="absolute -top-2 -right-4 text-xs font-bold bg-green-100 text-green-800 py-1 px-2 rounded-full">+23%</span>
                 </div>
-                <p className="text-gray-600 font-medium">Food Items Donated</p>
+                <p className="text-gray-600 font-medium">Cleanups Done</p>
               </div>
             </div>
             <div className="feature-card">
@@ -165,7 +165,7 @@ export default function Home() {
                   <span className="text-5xl font-bold text-gray-900">{stats.totalRestaurants}</span>
                   <span className="absolute -top-2 -right-4 text-xs font-bold bg-blue-100 text-blue-800 py-1 px-2 rounded-full">+12%</span>
                 </div>
-                <p className="text-gray-600 font-medium">Participating Restaurants</p>
+                <p className="text-gray-600 font-medium">Volunteers</p>
               </div>
             </div>
             <div className="feature-card">
@@ -179,7 +179,7 @@ export default function Home() {
                   <span className="text-5xl font-bold text-gray-900">{stats.totalNGOs}</span>
                   <span className="absolute -top-2 -right-4 text-xs font-bold bg-yellow-100 text-yellow-800 py-1 px-2 rounded-full">+8%</span>
                 </div>
-                <p className="text-gray-600 font-medium">Food Banks & NGOs</p>
+                <p className="text-gray-600 font-medium"> Partnered NGOs</p>
               </div>
             </div>
           </div>
@@ -192,7 +192,7 @@ export default function Home() {
           <div className="text-center mb-16">
             <span className="bg-green-100 text-green-800 text-sm font-medium px-4 py-1.5 rounded-full">Simple Process</span>
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mt-4 mb-6">How It Works</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">Our platform makes donating and receiving food simple and efficient</p>
+            {/* <p className="text-lg text-gray-600 max-w-2xl mx-auto">Our platform makes donating and receiving food simple and efficient</p> */}
           </div>
           
           <div className="grid grid-cols-1 gap-12 md:grid-cols-3 relative">
@@ -200,34 +200,36 @@ export default function Home() {
             <div className="hidden md:block absolute top-24 left-0 right-0 h-1 bg-gradient-to-r from-green-500 to-green-600 transform -translate-y-1/2 z-0"></div>
             
             <div className="relative z-10">
-              <div className="text-center">
-                <div className="bg-white rounded-full h-24 w-24 flex items-center justify-center mx-auto mb-6 shadow-lg border-4 border-green-100">
-                  <span className="absolute -top-2 -right-2 bg-green-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">1</span>
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-bold mb-3 text-gray-900">Register</h3>
-                <p className="text-gray-600">
-                  Sign up as a restaurant with excess food or as an organization that accepts donations.
-                </p>
-              </div>
-            </div>
+  <div className="text-center">
+    <div className="bg-white rounded-full h-24 w-24 flex items-center justify-center mx-auto mb-6 shadow-lg border-4 border-green-100">
+      <span className="absolute -top-2 -right-2 bg-green-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">1</span>
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+      </svg>
+    </div>
+    <h3 className="text-xl font-bold mb-3 text-gray-900">Register</h3>
+    <p className="text-gray-600">
+      Create your CleanScan account to start scanning waste and earning rewards.
+    </p>
+  </div>
+</div>
             
             <div className="relative z-10">
-              <div className="text-center">
-                <div className="bg-white rounded-full h-24 w-24 flex items-center justify-center mx-auto mb-6 shadow-lg border-4 border-green-100">
-                  <span className="absolute -top-2 -right-2 bg-green-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">2</span>
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-bold mb-3 text-gray-900">Donate or Claim</h3>
-                <p className="text-gray-600">
-                  Restaurants list available food, and NGOs/food banks can claim and pick it up.
-                </p>
-              </div>
-            </div>
+  <div className="text-center">
+    <div className="bg-white rounded-full h-24 w-24 flex items-center justify-center mx-auto mb-6 shadow-lg border-4 border-green-100">
+      <span className="absolute -top-2 -right-2 bg-green-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">2</span>
+      {/* Camera Icon */}
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+        <circle cx="12" cy="13" r="4"/>
+      </svg>
+    </div>
+    <h3 className="text-xl font-bold mb-3 text-gray-900">Spot & Scan</h3>
+    <p className="text-gray-600">
+      Use your camera to scan waste and detect its type in real-time.
+    </p>
+  </div>
+</div>
             
             <div className="relative z-10">
               <div className="text-center">
@@ -237,9 +239,9 @@ export default function Home() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold mb-3 text-gray-900">Rate & Review</h3>
+                <h3 className="text-xl font-bold mb-3 text-gray-900">Win Rewards</h3>
                 <p className="text-gray-600">
-                  After receiving food, NGOs can rate restaurants to build trust in the community.
+                Get rewarded with tokens, badges, and discounts for helping keep the environment clean.
                 </p>
               </div>
             </div>
@@ -255,9 +257,7 @@ export default function Home() {
               Join Our Community
             </div>
             <h2 className="text-3xl sm:text-4xl font-bold mb-6">Ready to Make a Difference?</h2>
-            <p className="text-xl mb-10 max-w-3xl mx-auto text-white/90">
-              Join our platform today and be part of the solution to reduce food waste while helping those in need.
-            </p>
+
             <Link
               href="/register"
               className="bg-white text-green-600 font-bold rounded-full px-10 py-4 text-center hover:bg-gray-100 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
@@ -296,9 +296,9 @@ export default function Home() {
                   <path d="M15 5C15 5 14.2 7 12 7C9.8 7 9 5 9 5" 
                         stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
-                <span className="font-bold text-white">FoodSaver</span>
+                <span className="font-bold text-white">CleanScan</span>
               </div>
-              <p className="text-sm mt-2">© 2023 FoodSaver. All rights reserved.</p>
+              <p className="text-sm mt-2">© 2023 CleanScan. All rights reserved.</p>
             </div>
             <div className="flex space-x-4">
               <a href="#" className="text-gray-400 hover:text-white transition">Terms</a>

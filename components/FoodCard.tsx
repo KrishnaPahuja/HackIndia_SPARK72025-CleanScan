@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import timeSince from '@/lib/timeSince';
+// import { fetchPatch } from './utils/fetchWithRailway';
 
 // Extend the user type to include role
 interface ExtendedUser {
@@ -167,7 +168,7 @@ export default function FoodCard({ food, onStatusChange }: FoodCardProps) {
           <p>Status: {food.status}</p>
           <p>Has claimedBy: {food.claimedBy ? 'Yes' : 'No'}</p>
           <p>Has ngoDetails: {food.ngoDetails ? 'Yes' : 'No'}</p>
-          <p>User role: {getUserRole()}</p>
+          {/* <p>User role: {getUserRole()}</p> */}
           {food.ngoDetails && (
             <p>NGO Details: {JSON.stringify(food.ngoDetails)}</p>
           )}
@@ -177,7 +178,7 @@ export default function FoodCard({ food, onStatusChange }: FoodCardProps) {
       {/* Display NGO information if item is claimed - with higher priority placement */}
       {(food.status === 'claimed' || food.status === 'completed') && food.ngoDetails && (
         <div className="mb-4 p-3 bg-green-50 rounded-lg border border-green-200">
-          <h4 className="text-sm font-semibold text-green-700 mb-1">Claimed by NGO:</h4>
+          <h4 className="text-sm font-semibold text-green-700 mb-1">Cleaned by ORG:</h4>
           <div className="flex items-start">
             <div className="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center font-semibold mr-2">
               {food.ngoDetails.name.substring(0, 1).toUpperCase()}
@@ -188,7 +189,7 @@ export default function FoodCard({ food, onStatusChange }: FoodCardProps) {
                 <p className="text-xs text-green-700">Phone: {food.ngoDetails.phone}</p>
               )}
               {food.ngoDetails.pickupTime && (
-                <p className="text-xs text-green-700">Pickup: {typeof food.ngoDetails.pickupTime === 'string' ? food.ngoDetails.pickupTime : formatDate(food.ngoDetails.pickupTime.toString())}</p>
+               false // <p className="text-xs text-green-700">Pickup: {typeof food.ngoDetails.pickupTime === 'string' ? food.ngoDetails.pickupTime : formatDate(food.ngoDetails.pickupTime.toString())}</p>
               )}
               {food.ngoDetails.notes && (
                 <p className="text-xs text-gray-600 mt-1">{food.ngoDetails.notes}</p>
@@ -261,7 +262,7 @@ export default function FoodCard({ food, onStatusChange }: FoodCardProps) {
             onClick={handleClaimFood}
             className="btn-primary text-sm py-1 px-3"
           >
-            Claim Food
+            Accept Task
           </button>
         )}
       </div>
@@ -284,7 +285,7 @@ export default function FoodCard({ food, onStatusChange }: FoodCardProps) {
                   value={ngoDetails.name}
                   onChange={(e) => setNgoDetails({...ngoDetails, name: e.target.value})}
                   className="w-full p-2 border border-gray-300 rounded"
-                  placeholder="Who will pick up the food?"
+                  placeholder=""
                   required
                 />
               </div>
@@ -298,21 +299,21 @@ export default function FoodCard({ food, onStatusChange }: FoodCardProps) {
                   value={ngoDetails.phone}
                   onChange={(e) => setNgoDetails({...ngoDetails, phone: e.target.value})}
                   className="w-full p-2 border border-gray-300 rounded"
-                  placeholder="Contact phone for pickup"
+                  placeholder=""
                   required
                 />
               </div>
               
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Pickup Time*
+                    Estimated Arrival Time*
                 </label>
                 <input
                   type="text"
                   value={ngoDetails.pickupTime}
                   onChange={(e) => setNgoDetails({...ngoDetails, pickupTime: e.target.value})}
                   className="w-full p-2 border border-gray-300 rounded"
-                  placeholder="When will you pick up? (e.g. Today at 5pm)"
+                  placeholder=""
                   required
                 />
               </div>
@@ -325,7 +326,7 @@ export default function FoodCard({ food, onStatusChange }: FoodCardProps) {
                   value={ngoDetails.notes}
                   onChange={(e) => setNgoDetails({...ngoDetails, notes: e.target.value})}
                   className="w-full p-2 border border-gray-300 rounded"
-                  placeholder="Any additional details the restaurant should know"
+                  placeholder=""
                   rows={3}
                 />
               </div>
@@ -343,7 +344,7 @@ export default function FoodCard({ food, onStatusChange }: FoodCardProps) {
                 disabled={loading}
                 className="btn-primary"
               >
-                {loading ? 'Submitting...' : 'Confirm Claim'}
+                {loading ? 'Submitting...' : 'Confirm'}
               </button>
             </div>
           </div>

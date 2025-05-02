@@ -10,7 +10,7 @@ export async function POST(req: Request) {
     const { name, email, password, address, description, role } = await req.json();
 
     // Validate required fields
-    if (!name || !email || !password || !address || !description || !role) {
+    if (!name || !email || !password ) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }

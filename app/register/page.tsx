@@ -11,9 +11,9 @@ export default function Register() {
     name: '',
     email: '',
     password: '',
-    address: '',
-    description: '',
-    role: '',
+    address: '1',
+    description: '1',
+    role: 'ngo',
   });
   
   const [error, setError] = useState('');
@@ -112,7 +112,7 @@ export default function Register() {
           <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
             <div className="text-center mb-8">
               <h1 className="text-3xl font-bold text-gray-900 mb-2">Create Account</h1>
-              <p className="text-gray-600">Join our food waste reduction community</p>
+              <p className="text-gray-600">Join our  waste reduction community</p>
             </div>
             
             {error && (
@@ -137,8 +137,8 @@ export default function Register() {
                     <div className="bg-green-100 text-green-600 p-4 rounded-full mb-4">
                       <FaUtensils className="h-8 w-8" />
                     </div>
-                    <h3 className="text-xl font-bold text-gray-800 mb-2">Restaurant</h3>
-                    <p className="text-gray-600 text-center text-sm">I want to donate excess food</p>
+                    <h3 className="text-xl font-bold text-gray-800 mb-2">Public User</h3>
+                    <p className="text-gray-600 text-center text-sm">I want to report waste</p>
                   </button>
                   
                   <button
@@ -150,8 +150,8 @@ export default function Register() {
                     <div className="bg-blue-100 text-blue-600 p-4 rounded-full mb-4">
                       <FaHandHoldingHeart className="h-8 w-8" />
                     </div>
-                    <h3 className="text-xl font-bold text-gray-800 mb-2">NGO / Food Bank</h3>
-                    <p className="text-gray-600 text-center text-sm">I want to collect & distribute food</p>
+                    <h3 className="text-xl font-bold text-gray-800 mb-2">Organization</h3>
+                    <p className="text-gray-600 text-center text-sm">I want to collect or validate waste</p>
                   </button>
                 </div>
               </div>
@@ -163,14 +163,14 @@ export default function Register() {
                       {formData.role === 'restaurant' ? <FaUtensils className="h-3 w-3" /> : <FaHandHoldingHeart className="h-3 w-3" />}
                     </div>
                     <p className="text-sm text-gray-600 font-medium">
-                      You're registering as: <span className="font-bold">{formData.role === 'restaurant' ? 'Restaurant' : 'NGO / Food Bank'}</span>
+                      You're registering as: <span className="font-bold">{formData.role === 'restaurant' ? 'Public User' : 'Organization'}</span>
                     </p>
                   </div>
                 </div>
                 
                 <div>
                   <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-700">
-                    {formData.role === 'restaurant' ? 'Restaurant Name' : 'Organization Name'}
+                    {formData.role === 'restaurant' ? 'User Name' : 'Organization Name'}
                   </label>
                   <input
                     type="text"
@@ -228,7 +228,7 @@ export default function Register() {
                   )}
                 </div>
                 
-                <div>
+                {false &&( <div>
                   <label htmlFor="address" className="block mb-2 text-sm font-medium text-gray-700">
                     Address
                   </label>
@@ -241,9 +241,9 @@ export default function Register() {
                     className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
                     required
                   />
-                </div>
+                </div>)}
                 
-                <div>
+                {false &&(<div>
                   <label htmlFor="description" className="block mb-2 text-sm font-medium text-gray-700">
                     {formData.role === 'restaurant' 
                       ? 'Restaurant Description' 
@@ -261,7 +261,7 @@ export default function Register() {
                       ? 'Tell us about your restaurant, cuisine type, etc.' 
                       : 'Tell us about your organization and mission'}
                   />
-                </div>
+                </div>)}
                 
                 <div className="flex space-x-4 pt-4">
                   <button

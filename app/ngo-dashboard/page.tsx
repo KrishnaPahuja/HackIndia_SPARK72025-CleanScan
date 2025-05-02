@@ -22,7 +22,9 @@ interface FoodItem {
   _id: string;
   title: string;
   description: string;
-  status: string;
+  photo: string;
+  createdAt: string;
+  status: "available" | "claimed" | "completed" | "expired";
   donorId: {
     _id: string;
     name: string;
@@ -46,7 +48,157 @@ export default function NGODashboard() {
   const [showFilters, setShowFilters] = useState(false);
   const [filterLocation, setFilterLocation] = useState('');
   
+  // Added: state to drive the details popup
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [sector, setSector] = useState('');
+  const [certNumber, setCertNumber] = useState('');
+  const [volunteers, setVolunteers] = useState('');
+  const [wasteTypes, setWasteTypes] = useState('');
+  const [operationRegion, setOperationRegion] = useState('');
+  const [detailsError, setDetailsError] = useState('');
+  const [detailsLoading, setDetailsLoading] = useState(false);
+
+  // State to track if org details exist
+  const [hasOrgDetails, setHasOrgDetails] = useState(false);
+
+  const openDetailsModal = async () => {
+    setDetailsError('');
+    setDetailsLoading(true);
+    
+    try {
+      // Fetch existing NGO details
+      const response = await fetch('/api/ngoDetails');
+      
+      if (response.ok) {
+        const data = await response.json();
+        // Set the form fields with existing data, or empty strings if no data exists
+        setSector(data.ngoDetails?.sector || '');
+        setCertNumber(data.ngoDetails?.certNumber || '');
+        setVolunteers(data.ngoDetails?.volunteers || '');
+        setWasteTypes(data.ngoDetails?.wasteTypes || '');
+        setOperationRegion(data.ngoDetails?.operationRegion || '');
+        console.log('Loaded existing NGO details');
+      } else {
+        // If there's an error fetching data, use empty fields
+        setSector('');
+        setCertNumber('');
+        setVolunteers('');
+        setWasteTypes('');
+        setOperationRegion('');
+        console.error('Failed to fetch organization details');
+      }
+    } catch (error) {
+      console.error('Error loading organization details:', error);
+      // Reset form fields on error
+      setSector('');
+      setCertNumber('');
+      setVolunteers('');
+      setWasteTypes('');
+      setOperationRegion('');
+    } finally {
+      setDetailsLoading(false);
+      setShowDetailsModal(true);
+    }
+  };
+
+  // Fetch organization details on component mount
+  useEffect(() => {
+    const checkOrgDetails = async () => {
+      if (status === 'authenticated') {
+        try {
+          const response = await fetch('/api/ngoDetails');
+          if (response.ok) {
+            const data = await response.json();
+            // Check if any required fields exist
+            if (data.ngoDetails?.sector && data.ngoDetails?.certNumber) {
+              setHasOrgDetails(true);
+            }
+          }
+        } catch (error) {
+          console.error('Error checking organization details:', error);
+        }
+      }
+    };
+    
+    checkOrgDetails();
+  }, [status]);
+  
+  // Save details function with updated hasOrgDetails
+  const saveDetails = async () => {
+    setDetailsLoading(true);
+    setDetailsError('');
+    try {
+      if (!sector.trim() || !certNumber.trim()) {
+        throw new Error('Please fill all required fields');
+      }
+      const ngoDetails = {
+        sector,
+        certNumber,
+        volunteers,
+        wasteTypes,
+        operationRegion,
+        userId: (session?.user as ExtendedUser)?.id
+      };
+      
+      console.log("Saving NGO details:", ngoDetails);
+      
+      const res = await fetch('/api/ngoDetails', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(ngoDetails),
+      });
+      
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Failed to save details');
+      }
+      
+      // Set the hasOrgDetails flag to true after successful save
+      setHasOrgDetails(true);
+      setShowDetailsModal(false);
+
+      // now re-fetch your tasks so they're filtered by the new NGO details
+      fetchData();
+    } catch (e: any) {
+      setDetailsError(e.message);
+    } finally {
+      setDetailsLoading(false);
+    }
+  };
+  
   // Fetch data based on active tab
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      setError('');
+      
+      if (activeTab === 'available') {
+        const response = await fetch('/api/food?status=available');
+        if (!response.ok) {
+          throw new Error('Failed to fetch available food');
+        }
+        const data = await response.json();
+        setFoods(data);
+      } else if (activeTab === 'claimed' || activeTab === 'completed') {
+        const userId = (session?.user as ExtendedUser)?.id;
+        if (!userId) {
+          throw new Error('User ID not found');
+        }
+        
+        const response = await fetch(`/api/food?status=${activeTab}&userId=${userId}&userRole=ngo`);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch ${activeTab} food requests`);
+        }
+        const data = await response.json();
+        setMyRequests(data);
+      }
+    } catch (err: any) {
+      setError(err.message || 'An error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
+  
   useEffect(() => {
     // Redirect if not authenticated or not an NGO
     if (status === 'unauthenticated') {
@@ -58,38 +210,6 @@ export default function NGODashboard() {
       router.push('/restaurant-dashboard');
       return;
     }
-    
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        setError('');
-        
-        if (activeTab === 'available') {
-          const response = await fetch('/api/food?status=available');
-          if (!response.ok) {
-            throw new Error('Failed to fetch available food');
-          }
-          const data = await response.json();
-          setFoods(data);
-        } else if (activeTab === 'claimed' || activeTab === 'completed') {
-          const userId = (session?.user as ExtendedUser)?.id;
-          if (!userId) {
-            throw new Error('User ID not found');
-          }
-          
-          const response = await fetch(`/api/food?status=${activeTab}&userId=${userId}&userRole=ngo`);
-          if (!response.ok) {
-            throw new Error(`Failed to fetch ${activeTab} food requests`);
-          }
-          const data = await response.json();
-          setMyRequests(data);
-        }
-      } catch (err: any) {
-        setError(err.message || 'An error occurred');
-      } finally {
-        setLoading(false);
-      }
-    };
     
     if (status === 'authenticated') {
       fetchData();
@@ -226,7 +346,7 @@ export default function NGODashboard() {
           <div className="flex justify-between items-center mb-8">
             <div>
               <h1 className="text-3xl font-bold text-gray-900">NGO Dashboard</h1>
-              <p className="text-gray-600 mt-1">Find and manage food donations for your organization</p>
+              <p className="text-gray-600 mt-1">Find and manage tasks for your organization</p>
             </div>
             <div className="hidden md:block p-3 bg-green-50 rounded-lg border border-green-100">
               <span className="text-green-800 font-medium">Logged in as:</span> <span className="text-green-700">{session?.user?.name || 'User'}</span>
@@ -245,7 +365,7 @@ export default function NGODashboard() {
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
                 >
-                  Available Food
+                  Available Task
                 </button>
                 <button
                   onClick={() => setActiveTab('claimed')}
@@ -255,7 +375,7 @@ export default function NGODashboard() {
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
                 >
-                  Claimed Food
+                  Ongoing Task
                 </button>
                 <button
                   onClick={() => setActiveTab('completed')}
@@ -265,7 +385,20 @@ export default function NGODashboard() {
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
                 >
-                  Completed Pickups
+                  Completed Tasks
+                </button>
+                <button
+                  onClick={openDetailsModal}
+                  className={`whitespace-nowrap py-3 px-1 font-medium text-sm border-b-2 transition-colors ${
+                    showDetailsModal
+                      ? 'border-green-500 text-green-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}
+                >
+                  Organization Details
+                  {hasOrgDetails && (
+                    <span className="ml-1.5 inline-flex h-2 w-2 rounded-full bg-green-500" title="Details saved"></span>
+                  )}
                 </button>
               </nav>
               
@@ -360,7 +493,7 @@ export default function NGODashboard() {
                     onClick={() => setActiveTab('available')}
                     className="btn-primary"
                   >
-                    Browse Available Food
+                    Browse Available Task
                   </button>
                 )}
               </div>
@@ -368,7 +501,7 @@ export default function NGODashboard() {
               <>
                 {filteredFoods.length > 0 && (
                   <div className="mb-6 px-4 py-2 bg-gray-100 rounded-lg text-gray-600 text-sm">
-                    Showing {filteredFoods.length} {activeTab} food items
+                    Showing {filteredFoods.length} {activeTab} current task 
                     {searchTerm && ` matching "${searchTerm}"`}
                     {filterLocation && ` in "${filterLocation}"`}
                   </div>
@@ -398,7 +531,7 @@ export default function NGODashboard() {
                               className="w-full py-3 px-4 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors flex items-center justify-center"
                             >
                               <FaCheckCircle className="mr-2 h-4 w-4" />
-                              Mark as Received
+                              Mark as Completed
                             </button>
                           </div>
                         )}
@@ -421,6 +554,112 @@ export default function NGODashboard() {
           </div>
         </div>
       </main>
+      
+      {/* Organization Details Modal */}
+      {showDetailsModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <h2 className="text-xl font-bold mb-4">Organization Details</h2>
+            <p className="text-sm text-gray-600 mb-4">
+              Please provide details about your organization to help us match you with appropriate cleanup tasks.
+            </p>
+            
+            {detailsLoading ? (
+              <div className="py-8 text-center">
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-green-500"></div>
+                <p className="mt-2 text-gray-600">Loading your details...</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <div>
+                  <label className="block mb-2 text-sm font-medium text-gray-700">Sector of Specialization*</label>
+                  <input
+                    type="text"
+                    value={sector}
+                    onChange={e => setSector(e.target.value)}
+                    className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    placeholder="e.g., Environmental, Community cleanup"
+                    required
+                  />
+                  <p className="mt-1 text-xs text-gray-500">Main focus area of your organization</p>
+                </div>
+                
+                <div>
+                  <label className="block mb-2 text-sm font-medium text-gray-700">Certification Number*</label>
+                  <input
+                    type="text"
+                    value={certNumber}
+                    onChange={e => setCertNumber(e.target.value)}
+                    className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    placeholder="e.g., NGO12345"
+                    required
+                  />
+                  <p className="mt-1 text-xs text-gray-500">Your organization's official registration number</p>
+                </div>
+                
+                <div>
+                  <label className="block mb-2 text-sm font-medium text-gray-700">Number of Volunteers</label>
+                  <input
+                    type="number"
+                    value={volunteers}
+                    onChange={e => setVolunteers(e.target.value)}
+                    className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    placeholder="e.g., 25"
+                  />
+                  <p className="mt-1 text-xs text-gray-500">How many volunteers can your organization mobilize</p>
+                </div>
+                
+                <div>
+                  <label className="block mb-2 text-sm font-medium text-gray-700">Types of Waste Handled</label>
+                  <input
+                    type="text"
+                    value={wasteTypes}
+                    onChange={e => setWasteTypes(e.target.value)}
+                    className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    placeholder="e.g., Plastic, Electronic, General litter"
+                  />
+                  <p className="mt-1 text-xs text-gray-500">What types of waste does your organization specialize in collecting</p>
+                </div>
+                
+                <div>
+                  <label className="block mb-2 text-sm font-medium text-gray-700">Operation Region</label>
+                  <input
+                    type="text"
+                    value={operationRegion}
+                    onChange={e => setOperationRegion(e.target.value)}
+                    className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    placeholder="e.g., Central city, North suburb, Riverside area"
+                  />
+                  <p className="mt-1 text-xs text-gray-500">Geographical areas where your organization operates</p>
+                </div>
+              </div>
+            )}
+            
+            {detailsError && (
+              <div className="mt-4 p-2 bg-red-50 border-l-4 border-red-500 text-red-600 rounded-r">
+                <p className="font-medium">{detailsError}</p>
+              </div>
+            )}
+            
+            <div className="flex justify-end space-x-3 mt-6">
+              <button 
+                onClick={() => setShowDetailsModal(false)} 
+                className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded transition-colors"
+                disabled={detailsLoading}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={saveDetails}
+                disabled={detailsLoading}
+                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded transition-colors disabled:opacity-50"
+              >
+                {detailsLoading ? 'Saving...' : 'Save Details'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 } 

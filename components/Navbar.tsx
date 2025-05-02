@@ -59,7 +59,7 @@ export default function Navbar() {
                       stroke={scrolled ? "#16a34a" : "white"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
               <span className={`font-bold tracking-tight ${scrolled ? 'text-gradient' : ''}`}>
-                FoodSaver
+                CleanScan
               </span>
             </Link>
           </div>
